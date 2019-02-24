@@ -41,6 +41,11 @@ names(tib)[names(tib)=="pincome"] <- "Pincome"
 
 write.csv(tib, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_24_2019_anonymized.csv")
 
+library(RCurl)
+
+x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk/master/SEC_R_Crowd_2_24_2019_anonymized.csv")
+
+tib_cleaning <- read.csv(text=x)
 
 #reverse coding for impulsivity and sensation-seeking scales
 tib$BIS_6r <- as.numeric(dplyr::recode(tib$BIS_6, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
@@ -157,4 +162,4 @@ tib_cleaning <- tib_cleaning[tib_cleaning$Pnum!=91 & tib_cleaning$Pnum!=966 & ti
 tib_cleaning <- dplyr::select (tib_identified, -c(StartDate, EndDate, Status, IPAddress, Progress, Duration, Finished, RecordedDate, ResponseId, RecipientLastName, RecipientFirstName, RecipientEmail, ExternalReference, LocationLatitude, LocationLongitude, DistributionChannel, UserLanguage, ResultsEmail))
 
 
-save(tib_cleaning, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_24_2019_Rcoded.csv")
+write.csv(tib_cleaning, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_24_2019_Rcoded.csv")
