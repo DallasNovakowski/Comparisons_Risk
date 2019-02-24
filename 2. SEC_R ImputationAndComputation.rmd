@@ -5,7 +5,7 @@ output: html_document
 
 library(RCurl)
 
-x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk/master/SEC_R_Crowd_2_24_2019_anonymized.csv")
+x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk/master/SEC_R_Crowd_2_24_2019_Rcoded.csv")
 
 tib_cleaning <- read.csv(text=x)
 
@@ -185,8 +185,8 @@ residuals_std[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c(
 residuals_std2[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c("age", "Pnum", "sex", "Pincome","Hincome")]
 
 
-save(tib_summed, tib_complete, tib_std, tib_filled, tib_cleaning, tib_imputed, VarBase, residuals,residuals_num,residuals_std,residuals_std2, file="C:/Users/dalla/Google Drive/CURRENT/SEC_R_SGISaskGaming/SEC_R_crowdsourced/SEC_R_Crowd_2_22_2019_imputed.Rdata")
+save(tib_summed, tib_complete, tib_std, tib_filled, tib_cleaning, tib_imputed, VarBase, residuals,residuals_num,residuals_std,residuals_std2, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
 
-save(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, dat_imp6, dat_imp7, dat_imp8, dat_imp9, dat_imp10, dat_imp11, dat_imp12, dat_imp13, dat_imp14, dat_imp15, dat_imp16, dat_imp17, dat_imp18, dat_imp19, dat_imp20, tib_cleaning, tib_imputed, VarBase, file="C:/Users/dalla/Google Drive/CURRENT/SEC_R_SGISaskGaming/SEC_R_crowdsourced/SEC_R_Crowd_2_22_2019_imputations.Rdata")
+save(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, dat_imp6, dat_imp7, dat_imp8, dat_imp9, dat_imp10, dat_imp11, dat_imp12, dat_imp13, dat_imp14, dat_imp15, dat_imp16, dat_imp17, dat_imp18, dat_imp19, dat_imp20, tib_cleaning, tib_imputed, VarBase, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputations.Rdata")
 
-write.csv(tib_summed, file="C:/Users/dalla/Google Drive/CURRENT/SEC_R_SGISaskGaming/SEC_R_crowdsourced/SEC_R_Crowd_2_22_2019_cleaned&imputed.csv")
+write.csv(tib_summed, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_cleaned&imputed.csv")
