@@ -1,0 +1,94 @@
+---
+title: "SEC R specification Rmarkdown"
+output: html_document
+---
+
+
+library(lavaan)
+
+load(file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
+
+VarBase$R <- c('DsrA_3', 'DsrA_8', 'DsrA_14')"SSexp"  "SSdis"  "SSas"   "SSbor"  "BISa"   "BISm"   "BISn"   "Dhea"   "Dinv"   "Dgam"   "Deth" "Drec"   "Dsoc"   "Dm"     "GBS"    "DAST"   "FTND"   "AUDIT"  "NODS"
+
+#SECmodel
+SECmodel <- '
+fSEC =~ fSECenvy + fSECcse + fSECjs
+fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
+fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
+'
+
+fit.SEC.hierar <- cfa(SECmodel, data=residuals_std2, std.lv = TRUE)
+summary(fit.SEC.hierar, fit.measures=TRUE)
+parameterEstimates(fit.SEC.hierar)
+
+#Rmodel, replacing "-" with "+"
+Rmodel <- '
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND + DAST + NODS + Dm
+
+f1 =~ Dhea + SSdis + FTND + Dm + SOEPg + SOEPrec + SOEPocc
+f2 =~ SOEPfin + Dinv + Dgam + Deth + SSexp + FTND
+f3 =~ SOEPrec + Drec + SSas
+f4 =~ BISa + BISm + BISn
+f5 =~ SOEPdri + SOEPfin + NODS + Deth + Dsoc + SSexp
+'
+
+
+# Fit Rmodel, constraining covariances of all latent variables to be orthogonal
+fit.R.ortho <- cfa(Rmodel, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
+# display summary output
+summary(fit.R.ortho, fit.measures=TRUE)
+parameterEstimates(fit.R.ortho)
+
+# the specified Rmodel doesn't fit the data well: TLI = .714 (threshold >= .95), CFI = .762 (threshold >= .90), SRMR = .082 (threshold <.08), RMSEA = .091 (threhold < .08)
+
+#time for exploratory analyses for the measurement model
+library(parallel)
+library(nFactors)
+
+SEC_corr <- cor(residuals_std2[,c(VarBase$SECtot)])
+R_corr <- cor(residuals_std2[,c(VarBase$R)])
+all_corr <- cor(residuals_std2, use = "complete.obs")
+  
+#analyses for eigen values and parallel analysis
+ev <- eigen(R_corr)  
+ap <- nFactors::parallel(subject=822, var=nrow(R_corr), rep=100, cent=.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+
+#print results of parallel analysis
+print(nS)
+nS$Components$nparallel
+
+#parallel analysis indicates 4 factors
+nfact <- nS$Components$nparallel
+
+#bifactor model
+m_bif <-  fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact+1, rotate="bifactor", fm="ml")
+print(m_bif)
+print(m_bif$loadings, digits=2, cutoff=.29, sort=T)
+m1 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="varimax", fm="minres")
+m2 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="promax", fm="minres")
+m3 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="oblimin", fm="minres")
+m4 <- schmid(R_corr, nfactors=nfact, n.obs=822, rotate="promax")
+
+FullModel <- '
+
+#path
+fR ~ fSEC
+
+#SECmodel
+fSEC =~ fSECenvy + fSECcse + fSECjs
+fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
+fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
+
+#Rmodel
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND + DAST + NODS + Dm
+
+f1 =~ Dhea + SSdis + FTND + Dm - SOEPg - SOEPrec - SOEPocc
+f2 =~ SOEPfin + Dinv + Dgam + Deth - SSexp
+f3 =~ SOEPrec + Drec + SSas
+f4 =~ BISa + BISm + BISn
+f5 =~ SOEPdri + SOEPfin + NODS - Deth - Dsoc - SSexp
+'
+
