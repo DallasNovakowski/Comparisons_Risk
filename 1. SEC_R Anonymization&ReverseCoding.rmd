@@ -151,6 +151,10 @@ tib[,c(VarBase$NODSpipe)][is.na(tib[,c(VarBase$NODSpipe)])] <- 0
 tib_cleaning <- filter(tib, tib$AttnChckPass == 1)
 tib_imputed <- filter(tib, tib$AttnChckPass == 1)
 
+#only include participants that rated >= 5 on the opening attention check item (out of 7)
+tib_cleaning <- filter(tib, tib$AttnChck_rate >= 5)
+tib_imputed <- filter(tib, tib$AttnChck_rate >= 5)
+
 #Give nonsmokers 0 scores on all FTND items
 tib_cleaning[,c(VarBase$FTND)][tib_cleaning$Smoke_YN == 2 & is.na(tib_cleaning[,c(VarBase$FTND)])] <- 0
 tib_imputed[,c(VarBase$FTND)][tib_imputed$Smoke_YN == 2 & is.na(tib_imputed[,c(VarBase$FTND)])] <- 0
