@@ -52,7 +52,7 @@ all_corr <- cor(residuals_std2, use = "complete.obs")
   
 #analyses for eigen values and parallel analysis
 ev <- eigen(R_corr)  
-ap <- nFactors::parallel(subject=822, var=nrow(R_corr), rep=100, cent=.05)
+ap <- nFactors::parallel(subject=804, var=nrow(R_corr), rep=100, cent=.05)
 nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
 
 #print results of parallel analysis
@@ -63,13 +63,13 @@ nS$Components$nparallel
 nfact <- nS$Components$nparallel
 
 #bifactor model
-m_bif <-  fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact+1, rotate="bifactor", fm="ml")
+m_bif <-  fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact+1, rotate="bifactor", fm="ml")
 print(m_bif)
 print(m_bif$loadings, digits=2, cutoff=.29, sort=T)
-m1 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="varimax", fm="minres")
-m2 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="promax", fm="minres")
-m3 <- fa(r=R_corr, covar=F, n.obs=822, nfactors=nfact, rotate="oblimin", fm="minres")
-m4 <- schmid(R_corr, nfactors=nfact, n.obs=822, rotate="promax")
+m1 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="varimax", fm="minres")
+m2 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="promax", fm="minres")
+m3 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="oblimin", fm="minres")
+m4 <- schmid(R_corr, nfactors=nfact, n.obs=804, rotate="promax")
 
 FullModel <- '
 
