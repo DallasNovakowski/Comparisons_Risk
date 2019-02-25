@@ -49,7 +49,7 @@ hist(tib_cleaned$sex)
 set.seed(111)
 dat_na <- tib_cleaned[,c(VarBase$SSexp, VarBase$SSdis, VarBase$SSas, VarBase$SSbor, VarBase$BISa, VarBase$BISm, VarBase$BISn, VarBase$Dhea, VarBase$Dinv, VarBase$Dgam, VarBase$Deth, VarBase$Drec, VarBase$Dsoc, VarBase$SOEP, VarBase$Dm, VarBase$GBS, VarBase$NODS, VarBase$FTND, VarBase$DAST, VarBase$AUDIT, VarBase$SECtot)]
 
-#WARNING: THIS PROCEDURE TAKES A VERY LONG TIME
+#WARNING: THIS IMPUTATION PROCEDURE TAKES A VERY LONG TIME
 imputed <- mice(dat_na, m=20, maxit=10, meth='pmm', seed=500)
 
   dat_imp1 <- mice::complete(imputed, 1)
