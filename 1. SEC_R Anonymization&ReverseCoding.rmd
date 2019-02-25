@@ -27,7 +27,7 @@ library(readr)
 library(rowr)
 library(lavaan)
 
-#Load data, assign to tibble
+#Load local identified data, assign to tibble
 tib_identified <- read_csv(file = "C:/Users/dalla/Google Drive/CURRENT/SEC_R_SGISaskGaming/SEC_R_crowdsourced/SEC_R_Study_CrowdSourced_February 4, 2019_15.08_numeric.csv")
 #}
 
@@ -48,66 +48,66 @@ x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk
 tib_cleaning <- read.csv(text=x)
 
 #reverse coding for impulsivity and sensation-seeking scales
-tib$BIS_6r <- as.numeric(dplyr::recode(tib$BIS_6, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
-tib$BIS_7r <- as.numeric(dplyr::recode(tib$BIS_7, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
-tib$BIS_8r <- as.numeric(dplyr::recode(tib$BIS_8, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
-tib$BIS_9r <- as.numeric(dplyr::recode(tib$BIS_9, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
-tib$BIS_10r <- as.numeric(dplyr::recode(tib$BIS_10, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
-tib$BIS_13r <- as.numeric(dplyr::recode(tib$BIS_13, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_6r <- as.numeric(dplyr::recode(tib_cleaning$BIS_6, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_7r <- as.numeric(dplyr::recode(tib_cleaning$BIS_7, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_8r <- as.numeric(dplyr::recode(tib_cleaning$BIS_8, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_9r <- as.numeric(dplyr::recode(tib_cleaning$BIS_9, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_10r <- as.numeric(dplyr::recode(tib_cleaning$BIS_10, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
+tib_cleaning$BIS_13r <- as.numeric(dplyr::recode(tib_cleaning$BIS_13, "1" = "4" , "3" = "2" , "4" = "1" , "2" = "3"))
 
 
-tib$BSCS_2r <- as.numeric(dplyr::recode(tib$BSCS_2, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_3r <- as.numeric(dplyr::recode(tib$BSCS_3, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_4r <- as.numeric(dplyr::recode(tib$BSCS_4, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_5r <- as.numeric(dplyr::recode(tib$BSCS_5, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_7r <- as.numeric(dplyr::recode(tib$BSCS_7, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_9r <- as.numeric(dplyr::recode(tib$BSCS_9, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_10r <- as.numeric(dplyr::recode(tib$BSCS_10, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_12r <- as.numeric(dplyr::recode(tib$BSCS_12, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
-tib$BSCS_13r <- as.numeric(dplyr::recode(tib$BSCS_13, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_2r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_2, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_3r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_3, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_4r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_4, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_5r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_5, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_7r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_7, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_9r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_9, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_10r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_10, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_12r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_12, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
+tib_cleaning$BSCS_13r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_13, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
 
 
 
 
 #recoding FTND measures because they're skewed by +1
-tib$FTND_1f <- tib$FTND_1 -1 
-tib$FTND_2f <- tib$FTND_2 -1 
-tib$FTND_3f <- tib$FTND_3 -1 
-tib$FTND_4f <- tib$FTND_4 -1 
-tib$FTND_5f <- tib$FTND_5 -1 
-tib$FTND_6f <- tib$FTND_6 -1 
+tib_cleaning$FTND_1f <- tib_cleaning$FTND_1 -1 
+tib_cleaning$FTND_2f <- tib_cleaning$FTND_2 -1 
+tib_cleaning$FTND_3f <- tib_cleaning$FTND_3 -1 
+tib_cleaning$FTND_4f <- tib_cleaning$FTND_4 -1 
+tib_cleaning$FTND_5f <- tib_cleaning$FTND_5 -1 
+tib_cleaning$FTND_6f <- tib_cleaning$FTND_6 -1 
 
 #recoding NODS measures so that 1(yes)=1 and 2(no)=0 
-tib$NODS_1f <- as.numeric(dplyr::recode(tib$NODS_1, "1" = "1" , "2" = "0"))
-tib$NODS_2f <- as.numeric(dplyr::recode(tib$NODS_2, "1" = "1" , "2" = "0"))
-tib$NODS_3f <- as.numeric(dplyr::recode(tib$NODS_3, "1" = "1" , "2" = "0"))
-tib$NODS_4f <- as.numeric(dplyr::recode(tib$NODS_4, "1" = "1" , "2" = "0"))
-tib$NODS_5f <- as.numeric(dplyr::recode(tib$NODS_5, "1" = "1" , "2" = "0"))
-tib$NODS_6f <- as.numeric(dplyr::recode(tib$NODS_6, "1" = "1" , "2" = "0"))
-tib$NODS_7f <- as.numeric(dplyr::recode(tib$NODS_7, "1" = "1" , "2" = "0"))
-tib$NODS_8f <- as.numeric(dplyr::recode(tib$NODS_8, "1" = "1" , "2" = "0"))
-tib$NODS_9f <- as.numeric(dplyr::recode(tib$NODS_9, "1" = "1" , "2" = "0"))
-tib$NODS_10f <- as.numeric(dplyr::recode(tib$NODS_10, "1" = "1" , "2" = "0"))
-tib$NODS_11f <- as.numeric(dplyr::recode(tib$NODS_11, "1" = "1" , "2" = "0"))
-tib$NODS_12f <- as.numeric(dplyr::recode(tib$NODS_12, "1" = "1" , "2" = "0"))
-tib$NODS_13f <- as.numeric(dplyr::recode(tib$NODS_13, "1" = "1" , "2" = "0"))
-tib$NODS_14f <- as.numeric(dplyr::recode(tib$NODS_14, "1" = "1" , "2" = "0"))
-tib$NODS_15f <- as.numeric(dplyr::recode(tib$NODS_15, "1" = "1" , "2" = "0"))
-tib$NODS_16f <- as.numeric(dplyr::recode(tib$NODS_16, "1" = "1" , "2" = "0"))
-tib$NODS_17f <- as.numeric(dplyr::recode(tib$NODS_17, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_1f <- as.numeric(dplyr::recode(tib_cleaning$NODS_1, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_2f <- as.numeric(dplyr::recode(tib_cleaning$NODS_2, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_3f <- as.numeric(dplyr::recode(tib_cleaning$NODS_3, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_4f <- as.numeric(dplyr::recode(tib_cleaning$NODS_4, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_5f <- as.numeric(dplyr::recode(tib_cleaning$NODS_5, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_6f <- as.numeric(dplyr::recode(tib_cleaning$NODS_6, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_7f <- as.numeric(dplyr::recode(tib_cleaning$NODS_7, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_8f <- as.numeric(dplyr::recode(tib_cleaning$NODS_8, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_9f <- as.numeric(dplyr::recode(tib_cleaning$NODS_9, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_10f <- as.numeric(dplyr::recode(tib_cleaning$NODS_10, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_11f <- as.numeric(dplyr::recode(tib_cleaning$NODS_11, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_12f <- as.numeric(dplyr::recode(tib_cleaning$NODS_12, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_13f <- as.numeric(dplyr::recode(tib_cleaning$NODS_13, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_14f <- as.numeric(dplyr::recode(tib_cleaning$NODS_14, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_15f <- as.numeric(dplyr::recode(tib_cleaning$NODS_15, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_16f <- as.numeric(dplyr::recode(tib_cleaning$NODS_16, "1" = "1" , "2" = "0"))
+tib_cleaning$NODS_17f <- as.numeric(dplyr::recode(tib_cleaning$NODS_17, "1" = "1" , "2" = "0"))
 
 #recoding DAST measures so that 1(yes)=1 and 2(no)=0 (and reverse-code DAST_3f)
-tib$DAST_1f <- as.numeric(dplyr::recode(tib$DAST_1, "1" = "1" , "2" = "0"))
-tib$DAST_2f <- as.numeric(dplyr::recode(tib$DAST_2, "1" = "1" , "2" = "0"))
-tib$DAST_3f <- as.numeric(dplyr::recode(tib$DAST_3, "1" = "1" , "2" = "0"))
-tib$DAST_3fr <- as.numeric(dplyr::recode(tib$DAST_3f, "1" = "0" , "0" = "1"))
-tib$DAST_4f <- as.numeric(dplyr::recode(tib$DAST_4, "1" = "1" , "2" = "0"))
-tib$DAST_5f <- as.numeric(dplyr::recode(tib$DAST_5, "1" = "1" , "2" = "0"))
-tib$DAST_6f <- as.numeric(dplyr::recode(tib$DAST_6, "1" = "1" , "2" = "0"))
-tib$DAST_7f <- as.numeric(dplyr::recode(tib$DAST_7, "1" = "1" , "2" = "0"))
-tib$DAST_8f <- as.numeric(dplyr::recode(tib$DAST_8, "1" = "1" , "2" = "0"))
-tib$DAST_9f <- as.numeric(dplyr::recode(tib$DAST_9, "1" = "1" , "2" = "0"))
-tib$DAST_10f <- as.numeric(dplyr::recode(tib$DAST_10, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_1f <- as.numeric(dplyr::recode(tib_cleaning$DAST_1, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_2f <- as.numeric(dplyr::recode(tib_cleaning$DAST_2, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_3f <- as.numeric(dplyr::recode(tib_cleaning$DAST_3, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_3fr <- as.numeric(dplyr::recode(tib_cleaning$DAST_3f, "1" = "0" , "0" = "1"))
+tib_cleaning$DAST_4f <- as.numeric(dplyr::recode(tib_cleaning$DAST_4, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_5f <- as.numeric(dplyr::recode(tib_cleaning$DAST_5, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_6f <- as.numeric(dplyr::recode(tib_cleaning$DAST_6, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_7f <- as.numeric(dplyr::recode(tib_cleaning$DAST_7, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_8f <- as.numeric(dplyr::recode(tib_cleaning$DAST_8, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_9f <- as.numeric(dplyr::recode(tib_cleaning$DAST_9, "1" = "1" , "2" = "0"))
+tib_cleaning$DAST_10f <- as.numeric(dplyr::recode(tib_cleaning$DAST_10, "1" = "1" , "2" = "0"))
 
 #create lists for variable computation
 VarBase <- list()
@@ -145,15 +145,15 @@ VarBase$SECjs <- c('SEC_9','SEC_10', 'SEC_11', 'SEC_12')
 VarBase$ALL <- c(VarBase$SSexp, VarBase$SSdis, VarBase$SSas, VarBase$SSbor, VarBase$BISa, VarBase$BISm, VarBase$BISn, VarBase$Dhea, VarBase$Dinv, VarBase$Dgam, VarBase$Deth, VarBase$Drec, VarBase$Dsoc, VarBase$SOEP, VarBase$Dm, VarBase$GBS, VarBase$NODS, VarBase$DAST, VarBase$AUDIT, VarBase$SECtot)
 
 # Recode NODS_7, NODS_12, NODS_15 so that NA = 0 (piped items that are skipped with "no" responses)
-tib[,c(VarBase$NODSpipe)][is.na(tib[,c(VarBase$NODSpipe)])] <- 0
+tib_cleaning[,c(VarBase$NODSpipe)][is.na(tib_cleaning[,c(VarBase$NODSpipe)])] <- 0
 
 #create cleaning datasets, only including those participants that passed the attention check
-tib_cleaning <- filter(tib, tib$AttnChckPass == 1)
-tib_imputed <- filter(tib, tib$AttnChckPass == 1)
+tib_cleaning <- filter(tib_cleaning, tib_cleaning$AttnChckPass == 1)
+tib_imputed <- filter(tib_cleaning, tib_cleaning$AttnChckPass == 1)
 
 #only include participants that rated >= 5 on the opening attention check item (out of 7)
-tib_cleaning <- filter(tib, tib$AttnChck_rate >= 5)
-tib_imputed <- filter(tib, tib$AttnChck_rate >= 5)
+tib_cleaning <- filter(tib_cleaning, tib_cleaning$AttnChck_rate >= 5)
+tib_imputed <- filter(tib_cleaning, tib_cleaning$AttnChck_rate >= 5)
 
 #Give nonsmokers 0 scores on all FTND items
 tib_cleaning[,c(VarBase$FTND)][tib_cleaning$Smoke_YN == 2 & is.na(tib_cleaning[,c(VarBase$FTND)])] <- 0
@@ -163,7 +163,7 @@ tib_imputed[,c(VarBase$FTND)][tib_imputed$Smoke_YN == 2 & is.na(tib_imputed[,c(V
 tib_cleaning <- tib_cleaning[tib_cleaning$Pnum!=91 & tib_cleaning$Pnum!=966 & tib_cleaning$Pnum!=606, ]
 
 
-tib_cleaning <- dplyr::select (tib_identified, -c(StartDate, EndDate, Status, IPAddress, Progress, Duration, Finished, RecordedDate, ResponseId, RecipientLastName, RecipientFirstName, RecipientEmail, ExternalReference, LocationLatitude, LocationLongitude, DistributionChannel, UserLanguage, ResultsEmail))
+#tib_cleaning <- dplyr::select (tib_identified, -c(StartDate, EndDate, Status, IPAddress, Progress, Duration, Finished, RecordedDate, ResponseId, RecipientLastName, RecipientFirstName, RecipientEmail, ExternalReference, LocationLatitude, LocationLongitude, DistributionChannel, UserLanguage, ResultsEmail))
 
 
 write.csv(tib_cleaning, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_24_2019_Rcoded.csv")
