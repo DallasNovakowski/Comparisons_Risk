@@ -9,17 +9,50 @@ x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk
 
 tib_cleaning <- read.csv(text=x)
 
+tib_cleaned <- tib_cleaning
 
-      
+Let's see if age needs cleaning 
+```{r Age before cleaning}
+hist(tib_cleaning$age)
+```
+
+
+```{r Sex before cleaning}
+hist(tib_cleaning$sex)
+ind <- which(tib_cleaning$sex > 2)
+tib_cleaning[ind,]
+#8 participants either responded "other"" or did not disclose
+other <- which(tib_cleaning$sex == 3)
+nodisclose <- which(tib_cleaning$sex == 4)
+```
+
+# how many other? (4); 2 are genuine queer; the remaining 2 are nonsensical ("heterosexual")
+NROW(other)
+``` {r}
+tib_cleaned[other,]
+```
+
+#let's drop the nonsensical responses from the cleaned data frame
+
+tib_cleaned <- subset(tib_cleaned, !Pnum%in%c(116, 682)) 
+#there are 4 no-disclose;  they (and the legitimate "other" sex responses) will be retained for now (although they will end up being excluded from any analyses that use the ~ age+sex residuals)
+NROW(nodisclose)
+tib_cleaning[nodisclose,]
+
+``` {r}
+hist(tib_cleaned$sex)
+```
+
+
 
 #imputing all items except demographics, and assigning these imputed datasets to unique objects
 set.seed(111)
-dat_na <- tib_cleaning[,c(VarBase$SSexp, VarBase$SSdis, VarBase$SSas, VarBase$SSbor, VarBase$BISa, VarBase$BISm, VarBase$BISn, VarBase$Dhea, VarBase$Dinv, VarBase$Dgam, VarBase$Deth, VarBase$Drec, VarBase$Dsoc, VarBase$SOEP, VarBase$Dm, VarBase$GBS, VarBase$NODS, VarBase$FTND, VarBase$DAST, VarBase$AUDIT, VarBase$SECtot)]
+dat_na <- tib_cleaned[,c(VarBase$SSexp, VarBase$SSdis, VarBase$SSas, VarBase$SSbor, VarBase$BISa, VarBase$BISm, VarBase$BISn, VarBase$Dhea, VarBase$Dinv, VarBase$Dgam, VarBase$Deth, VarBase$Drec, VarBase$Dsoc, VarBase$SOEP, VarBase$Dm, VarBase$GBS, VarBase$NODS, VarBase$FTND, VarBase$DAST, VarBase$AUDIT, VarBase$SECtot)]
 
-
+#WARNING: THIS PROCEDURE TAKES A VERY LONG TIME
 imputed <- mice(dat_na, m=20, maxit=10, meth='pmm', seed=500)
 
-  	dat_imp1 <- mice::complete(imputed, 1)
+  dat_imp1 <- mice::complete(imputed, 1)
 	dat_imp2 <- mice::complete(imputed, 2)
 	dat_imp3 <- mice::complete(imputed, 3)
 	dat_imp4 <- mice::complete(imputed, 4)
@@ -44,26 +77,50 @@ imputed <- mice(dat_na, m=20, maxit=10, meth='pmm', seed=500)
 imputed$loggedEvents
 
 #Binding participant numbers to imputed data sets
-dat_imp1 <- cbind.fill(dat_imp1,tib_cleaning[,c("Pnum")])
-dat_imp2 <- cbind.fill(dat_imp2,tib_cleaning[,c("Pnum")])
-dat_imp3 <- cbind.fill(dat_imp3,tib_cleaning[,c("Pnum")])
-dat_imp4 <- cbind.fill(dat_imp4,tib_cleaning[,c("Pnum")])
-dat_imp5 <- cbind.fill(dat_imp5,tib_cleaning[,c("Pnum")])
-dat_imp6 <- cbind.fill(dat_imp6,tib_cleaning[,c("Pnum")])
-dat_imp7 <- cbind.fill(dat_imp7,tib_cleaning[,c("Pnum")])
-dat_imp8 <- cbind.fill(dat_imp8,tib_cleaning[,c("Pnum")])
-dat_imp9 <- cbind.fill(dat_imp9,tib_cleaning[,c("Pnum")])
-dat_imp10 <- cbind.fill(dat_imp10,tib_cleaning[,c("Pnum")])
-dat_imp11 <- cbind.fill(dat_imp11,tib_cleaning[,c("Pnum")])
-dat_imp12 <- cbind.fill(dat_imp12,tib_cleaning[,c("Pnum")])
-dat_imp13 <- cbind.fill(dat_imp13,tib_cleaning[,c("Pnum")])
-dat_imp14 <- cbind.fill(dat_imp14,tib_cleaning[,c("Pnum")])
-dat_imp15 <- cbind.fill(dat_imp15,tib_cleaning[,c("Pnum")])
-dat_imp16 <- cbind.fill(dat_imp16,tib_cleaning[,c("Pnum")])
-dat_imp17 <- cbind.fill(dat_imp17,tib_cleaning[,c("Pnum")])
-dat_imp18 <- cbind.fill(dat_imp18,tib_cleaning[,c("Pnum")])
-dat_imp19 <- cbind.fill(dat_imp19,tib_cleaning[,c("Pnum")])
-dat_imp20 <- cbind.fill(dat_imp20,tib_cleaning[,c("Pnum")])
+dat_imp1 <- cbind.fill(dat_imp1,tib_cleaned[,c("Pnum")])
+dat_imp2 <- cbind.fill(dat_imp2,tib_cleaned[,c("Pnum")])
+dat_imp3 <- cbind.fill(dat_imp3,tib_cleaned[,c("Pnum")])
+dat_imp4 <- cbind.fill(dat_imp4,tib_cleaned[,c("Pnum")])
+dat_imp5 <- cbind.fill(dat_imp5,tib_cleaned[,c("Pnum")])
+dat_imp6 <- cbind.fill(dat_imp6,tib_cleaned[,c("Pnum")])
+dat_imp7 <- cbind.fill(dat_imp7,tib_cleaned[,c("Pnum")])
+dat_imp8 <- cbind.fill(dat_imp8,tib_cleaned[,c("Pnum")])
+dat_imp9 <- cbind.fill(dat_imp9,tib_cleaned[,c("Pnum")])
+dat_imp10 <- cbind.fill(dat_imp10,tib_cleaned[,c("Pnum")])
+dat_imp11 <- cbind.fill(dat_imp11,tib_cleaned[,c("Pnum")])
+dat_imp12 <- cbind.fill(dat_imp12,tib_cleaned[,c("Pnum")])
+dat_imp13 <- cbind.fill(dat_imp13,tib_cleaned[,c("Pnum")])
+dat_imp14 <- cbind.fill(dat_imp14,tib_cleaned[,c("Pnum")])
+dat_imp15 <- cbind.fill(dat_imp15,tib_cleaned[,c("Pnum")])
+dat_imp16 <- cbind.fill(dat_imp16,tib_cleaned[,c("Pnum")])
+dat_imp17 <- cbind.fill(dat_imp17,tib_cleaned[,c("Pnum")])
+dat_imp18 <- cbind.fill(dat_imp18,tib_cleaned[,c("Pnum")])
+dat_imp19 <- cbind.fill(dat_imp19,tib_cleaned[,c("Pnum")])
+dat_imp20 <- cbind.fill(dat_imp20,tib_cleaned[,c("Pnum")])
+
+#renaming object (which pnum got named as in cbind function) to "pnum"
+library(plyr)
+dat_imp1 <- rename(dat_imp1, c("object"="Pnum"))
+dat_imp2 <- rename(dat_imp2, c("object"="Pnum"))
+dat_imp3 <- rename(dat_imp3, c("object"="Pnum"))
+dat_imp4 <- rename(dat_imp4, c("object"="Pnum"))
+dat_imp5 <- rename(dat_imp5, c("object"="Pnum"))
+dat_imp6 <- rename(dat_imp6, c("object"="Pnum"))
+dat_imp7 <- rename(dat_imp7, c("object"="Pnum"))
+dat_imp8 <- rename(dat_imp8, c("object"="Pnum"))
+dat_imp9 <- rename(dat_imp9, c("object"="Pnum"))
+dat_imp10 <- rename(dat_imp10, c("object"="Pnum"))
+dat_imp11 <- rename(dat_imp11, c("object"="Pnum"))
+dat_imp12 <- rename(dat_imp12, c("object"="Pnum"))
+dat_imp13 <- rename(dat_imp13, c("object"="Pnum"))
+dat_imp14 <- rename(dat_imp14, c("object"="Pnum"))
+dat_imp15 <- rename(dat_imp15, c("object"="Pnum"))
+dat_imp16 <- rename(dat_imp16, c("object"="Pnum"))
+dat_imp17 <- rename(dat_imp17, c("object"="Pnum"))
+dat_imp18 <- rename(dat_imp18, c("object"="Pnum"))
+dat_imp19 <- rename(dat_imp19, c("object"="Pnum"))
+dat_imp20 <- rename(dat_imp20, c("object"="Pnum"))
+
 
 
 #making summary imputed data set (taking mean from the 20 separate imputed data sets), then adding demographics
@@ -74,9 +131,8 @@ library(data.table)
 tib_imputed <- rbindlist(list(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, dat_imp6, dat_imp7, dat_imp8, dat_imp9, dat_imp10, dat_imp11, dat_imp12, dat_imp13, dat_imp14, dat_imp15, dat_imp16, dat_imp17, dat_imp18, dat_imp19, dat_imp20))[,lapply(.SD,mean), Pnum]
 
 #drop NODS_15f because everyone answered "no"
-tib_imputed <- dplyr::select (tib_imputed,-NODS_15f)
 
-tib_filled <- cbind.fill(tib_imputed,tib_cleaning[,c(VarBase$demo)])
+tib_filled <- cbind.fill(tib_imputed,tib_cleaned[,c(VarBase$demo)])
 
 # VARIABLE COMPUTATION
 SSexp <- rowSums(tib_filled[,c(VarBase$SSexp)])
@@ -125,10 +181,14 @@ tib_complete <- tib_summed[complete.cases(tib_summed),]
 
 
 # create objects with standardized variables / residuals after controlling for age, sex,
-tib_std <- tib_complete
+tib_std <- subset(tib_complete, !Pnum%in%c(62, 254, 766, 617, 490, 671)) 
 tib_std[] <- NA
 
-residuals <- tib_complete
+#exclude the four participants that did not disclose their gender AND the two participants that reported "other" gender when computing residuals
+residuals <- subset(tib_complete, !Pnum%in%c(62, 254, 766, 617, 490, 671)) 
+
+key <- subset(tib_complete, !Pnum%in%c(62, 254, 766, 617, 490, 671)) 
+
 residuals[] <- NA
 residuals_num <- residuals
 residuals_std <- residuals
@@ -137,38 +197,38 @@ residuals_std2 <- residuals
 models <- list()
 for (DV in DVs) {
   print(DV)
-  curr_raw <- tib_complete[,DV]
+  curr_raw <- key[,DV]
 
  # convert measures to numeric
   if (is.numeric(curr_raw)) curr_raw_num <- curr_raw
   else curr_raw_num <- as.numeric(as.character(curr_raw))
 
   # standardize measures
-  tib_std[,DV] <- scale(tib_complete[,DV])
+  tib_std[,DV] <- scale(key[,DV])
 
  # get residuals (but not for "age")
-# VarBase$Demo, VarBase$Pnum (tib_complete[,c(VarBase$Spec)])
+# VarBase$Demo, VarBase$Pnum (key[,c(VarBase$Spec)])
   if (DV != "age" & DV != "Pnum" & DV != "sex") {
 	formula <- as.formula(paste(DV, "~ 1 + age + sex"))
 
 
     if (is.numeric(curr_raw)) {
       p_col <- "grey"
-      ind_ok <- which(!is.na(tib_complete[,DV]))
-      mod.gauss <- lm(formula, data=tib_complete)
+      ind_ok <- which(!is.na(key[,DV]))
+      mod.gauss <- lm(formula, data=key)
       models[[DV]] <- mod.gauss
-      pred <- predict(mod.gauss, newdata=tib_complete[ind_ok,])
-      residuals[ind_ok,DV] <- tib_complete[ind_ok,DV] - pred
+      pred <- predict(mod.gauss, newdata=key[ind_ok,])
+      residuals[ind_ok,DV] <- key[ind_ok,DV] - pred
       residuals_num[,DV] <- residuals[,DV]
       residuals_std[,DV] <- as.numeric(scale(residuals_num[,DV]))
       residuals_std2[,DV] <- as.numeric(scale(residuals_num[,DV]))
     } else {
       p_col <- "red"
-      ind_ok <- which(!is.na(tib_complete[,DV]))
-      mod.ord <- clm(formula, data=tib_complete)
+      ind_ok <- which(!is.na(key[,DV]))
+      mod.ord <- clm(formula, data=key)
       models[[DV]] <- mod.ord
-      pred <- as.numeric(as.character(predict(mod.ord, type="class", newdata=tib_complete[ind_ok,])$fit))
-      residuals[ind_ok,DV] <- tib_num[ind_ok,DV] - pred
+      pred <- as.numeric(as.character(predict(mod.ord, type="class", newdata=key[ind_ok,])$fit))
+      residuals[ind_ok,DV] <- key[ind_ok,DV] - pred
       residuals[,DV] <- as.ordered(residuals[,DV])
       residuals_num[,DV] <- as.numeric(as.character(residuals[,DV]))
       residuals_std[,DV] <- residuals[,DV]
@@ -179,14 +239,14 @@ for (DV in DVs) {
   }
 }
 
-residuals[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c("age", "Pnum", "sex", "Pincome","Hincome")]
-residuals_num[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c("age", "Pnum", "sex", "Pincome","Hincome")]
-residuals_std[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c("age", "Pnum", "sex", "Pincome","Hincome")]
-residuals_std2[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- tib_complete[,c("age", "Pnum", "sex", "Pincome","Hincome")]
+residuals[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- key[,c("age", "Pnum", "sex", "Pincome","Hincome")]
+residuals_num[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- key[,c("age", "Pnum", "sex", "Pincome","Hincome")]
+residuals_std[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- key[,c("age", "Pnum", "sex", "Pincome","Hincome")]
+residuals_std2[,c("age", "Pnum", "sex", "Pincome","Hincome")] <- key[,c("age", "Pnum", "sex", "Pincome","Hincome")]
 
 
-save(tib_summed, tib_complete, tib_std, tib_filled, tib_cleaning, tib_imputed, VarBase, residuals,residuals_num,residuals_std,residuals_std2, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
+save(tib_summed, tib_complete, key, tib_std, tib_filled, tib_cleaned, tib_imputed, VarBase, residuals,residuals_num,residuals_std,residuals_std2, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
 
-save(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, dat_imp6, dat_imp7, dat_imp8, dat_imp9, dat_imp10, dat_imp11, dat_imp12, dat_imp13, dat_imp14, dat_imp15, dat_imp16, dat_imp17, dat_imp18, dat_imp19, dat_imp20, tib_cleaning, tib_imputed, VarBase, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputations.Rdata")
+save(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, dat_imp6, dat_imp7, dat_imp8, dat_imp9, dat_imp10, dat_imp11, dat_imp12, dat_imp13, dat_imp14, dat_imp15, dat_imp16, dat_imp17, dat_imp18, dat_imp19, dat_imp20, tib_cleaned, tib_imputed, VarBase, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputations.Rdata")
 
 write.csv(tib_summed, file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_cleaned&imputed.csv")
