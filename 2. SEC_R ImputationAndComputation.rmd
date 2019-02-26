@@ -3,6 +3,9 @@ title: "2. SEC_R ImputationAndComputation"
 output: html_document
 ---
 
+#If you just want the resulting dataset without having to go through the lengthy imputation
+load(file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
+
 library(RCurl)
 
 x <- getURL("https://raw.githubusercontent.com/DallasNovakowski/Comparisons_Risk/master/SEC_R_Crowd_2_24_2019_Rcoded.csv")
@@ -169,6 +172,34 @@ VarBase$R <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea'
 
 #adding computed variables to new dataset
 tib_summed <- cbind(tib_filled, SSexp, SSdis, SSas, SSbor, BISa, BISm, BISn, Dhea, Dinv, Dgam, Deth, Drec, Dsoc, Dm, GBS, DAST, FTND, AUDIT, NODS, SECenvy, SECcse, SECjs)
+
+hist(tib_summed$SSexp)
+hist(tib_summed$SSdis)
+hist(tib_summed$SSas)
+hist(tib_summed$SSbor)
+hist(tib_summed$BISa)
+hist(tib_summed$BISm)
+hist(tib_summed$BISn)
+hist(tib_summed$Dhea)
+hist(tib_summed$Dinv)
+hist(tib_summed$Dgam)
+hist(tib_summed$Deth)
+hist(tib_summed$Drec)
+hist(tib_summed$Dsoc)
+hist(tib_summed$Dm)
+hist(tib_summed$GBS)
+hist(tib_summed$DAST)
+hist(tib_summed$FTND)
+hist(tib_summed$AUDIT)
+hist(tib_summed$NODS)
+hist(tib_summed$SECenvy)
+hist(tib_summed$SECcse)
+hist(tib_summed$SECjs)
+hist(tib_summed$)
+hist(tib_summed$)
+
+summary(tib_summed[,VarBase$Dm])
+summary(tib_summed[,VarBase$SECcse])
 
 # find DVs that are numeric / ordered factors, which can be converted / scaled
 DVs <- NULL
