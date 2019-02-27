@@ -165,10 +165,6 @@ SECjs <- rowSums(tib_filled[,c(VarBase$SECjs)])
 #all variables that are the result of a summation process
 VarBase$Summed <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST', 'FTND', 'AUDIT', 'NODS', 'SECenvy', 'SECcse', 'SECjs')
 
-#all variables that are needed for model specification
-#VarBase$Demo, VarBase$Pnum
-VarBase$Spec <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST', 'FTND', 'AUDIT', 'NODS','SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
-VarBase$R <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST', 'FTND', 'AUDIT', 'NODS')
 
 #adding computed variables to new dataset
 tib_summed <- cbind(tib_filled, SSexp, SSdis, SSas, SSbor, BISa, BISm, BISn, Dhea, Dinv, Dgam, Deth, Drec, Dsoc, Dm, GBS, DAST, FTND, AUDIT, NODS, SECenvy, SECcse, SECjs)
@@ -182,24 +178,53 @@ hist(tib_summed$BISm)
 hist(tib_summed$BISn)
 hist(tib_summed$Dhea)
 hist(tib_summed$Dinv)
+#has large skew
 hist(tib_summed$Dgam)
+
 hist(tib_summed$Deth)
 hist(tib_summed$Drec)
 hist(tib_summed$Dsoc)
 hist(tib_summed$Dm)
+
+#also has large skew
 hist(tib_summed$GBS)
-hist(tib_summed$DAST)
-hist(tib_summed$FTND)
+
+# also also has large skew
 hist(tib_summed$AUDIT)
-hist(tib_summed$NODS)
+
 hist(tib_summed$SECenvy)
 hist(tib_summed$SECcse)
 hist(tib_summed$SECjs)
-hist(tib_summed$)
-hist(tib_summed$)
 
-summary(tib_summed[,VarBase$Dm])
-summary(tib_summed[,VarBase$SECcse])
+#Extremely Skewed
+hist(tib_summed$FTND)
+hist(tib_summed$DAST)
+hist(tib_summed$NODS)
+
+
+# dichotomization of extremely skewed pathological behaviours
+tib_summed$FTND_dich <- bin(tib_summed$FTND, nbins = round(nrow(tib_summed)/50), labels = NULL, method = c("length", "content", "clusters"), na.omit = TRUE)
+
+tib_summed$FTND_dich <- NA
+
+tib_summed$FTND_dich <- as.numeric(dplyr::recode(tib_summed$FTND, "0" = "0" , "1" = "1", "2" = "1", "3" = "1", "4" = "1", "5" = "1", "6" = "1", "7" = "1", "8" = "1", "9" = "1"))
+
+tib_summed$DAST_dich <-tib_summed$DAST
+
+tib_summed$DAST_dich[tib_summed$DAST_dich > 0] <- 1
+summary(tib_summed$DAST_dich)
+
+tib_summed$NODS_dich <- tib_summed$NODS
+summary(tib_summed$NODS)
+tib_summed$NODS_dich[tib_summed$NODS_dich > 0] <- 1
+summary(tib_summed$NODS_dich)
+
+#all variables that are needed for model specification
+#VarBase$Demo, VarBase$Pnum
+VarBase$Spec <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich','SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
+VarBase$R <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich')
+
+
 
 # find DVs that are numeric / ordered factors, which can be converted / scaled
 DVs <- NULL
