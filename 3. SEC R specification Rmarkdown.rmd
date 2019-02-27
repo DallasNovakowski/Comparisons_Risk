@@ -45,10 +45,11 @@ parameterEstimates(fit.R.ortho)
 #time for exploratory analyses for the measurement model
 library(parallel)
 library(nFactors)
+library(polycor)
 
 SEC_corr <- cor(residuals_std2[,c(VarBase$SECtot)])
-R_corr <- cor(residuals_std2[,c(VarBase$R)])
-all_corr <- cor(residuals_std2, use = "complete.obs")
+R_corr <- hetcor(residuals_std2[,c(VarBase$R)], std.err=F, ML=TRUE)
+all_corr <- hetcor(residuals_std2, use = "complete.obs")
   
 #analyses for eigen values and parallel analysis
 ev <- eigen(R_corr)  
@@ -91,3 +92,4 @@ f3 =~ SOEPrec + Drec + SSas
 f4 =~ BISa + BISm + BISn
 f5 =~ SOEPdri + SOEPfin + NODS - Deth - Dsoc - SSexp
 '
+
