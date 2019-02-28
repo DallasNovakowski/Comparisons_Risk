@@ -8,7 +8,7 @@ library(lavaan)
 
 load(file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
 
-VarBase$R <- c('DsrA_3', 'DsrA_8', 'DsrA_14', 'SOEPg', 'SOEPdri', 'SOEPocc', 'SOEPfin', 'SOEPrec', 'SOEPhea', 'SOEPsoc', 'SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST', 'FTND', 'AUDIT', 'NODS')
+VarBase$R <- c('SOEPg', 'SOEPdri', 'SOEPocc', 'SOEPfin', 'SOEPrec', 'SOEPhea', 'SOEPsoc', 'SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich')
 
 #SECmodel
 SECmodel <- '
@@ -24,13 +24,13 @@ parameterEstimates(fit.SEC.hierar)
 
 #Rmodel, replacing "-" with "+"
 Rmodel <- '
-fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND + DAST + NODS + Dm
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
 
-f1 =~ Dhea + SSdis + FTND + Dm + SOEPg + SOEPrec + SOEPocc
-f2 =~ SOEPfin + Dinv + Dgam + Deth + SSexp + FTND
+f1 =~ Dhea + SSdis + FTND_dich + Dm + SOEPg + SOEPrec + SOEPocc
+f2 =~ SOEPfin + Dinv + Dgam + Deth + SSexp + FTND_dich
 f3 =~ SOEPrec + Drec + SSas
 f4 =~ BISa + BISm + BISn
-f5 =~ SOEPdri + SOEPfin + NODS + Deth + Dsoc + SSexp
+f5 =~ SOEPdri + SOEPfin + NODS_dich + Deth + Dsoc + SSexp
 '
 
 
@@ -40,7 +40,7 @@ fit.R.ortho <- cfa(Rmodel, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
 summary(fit.R.ortho, fit.measures=TRUE)
 parameterEstimates(fit.R.ortho)
 
-# the specified Rmodel doesn't fit the data well: TLI = .714 (threshold >= .95), CFI = .762 (threshold >= .90), SRMR = .082 (threshold <.08), RMSEA = .091 (threhold < .08)
+# the specified Rmodel doesn't fit the data well: TLI = .702 (threshold >= .95), CFI = .752 (threshold >= .90), SRMR = .084 (threshold <.08), RMSEA = .092 (threhold < .08)
 
 #time for exploratory analyses for the measurement model
 library(parallel)
@@ -48,8 +48,8 @@ library(nFactors)
 library(polycor)
 
 SEC_corr <- cor(residuals_std2[,c(VarBase$SECtot)])
-R_corr <- hetcor(residuals_std2[,c(VarBase$R)], std.err=F, ML=TRUE)
-all_corr <- hetcor(residuals_std2, use = "complete.obs")
+R_corr <- cor(residuals_std2[,c(VarBase$R)])
+all_corr <- cor(residuals_std2, use = "complete.obs")
   
 #analyses for eigen values and parallel analysis
 ev <- eigen(R_corr)  
@@ -66,6 +66,9 @@ nfact <- nS$Components$nparallel
 #bifactor model
 m_bif <-  fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact+1, rotate="bifactor", fm="ml")
 print(m_bif)
+
+
+
 print(m_bif$loadings, digits=2, cutoff=.29, sort=T)
 m1 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="varimax", fm="minres")
 m2 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="promax", fm="minres")
