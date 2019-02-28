@@ -49,7 +49,7 @@ library(polycor)
 
 SEC_corr <- cor(residuals_std2[,c(VarBase$SECtot)])
 R_corr <- cor(residuals_std2[,c(VarBase$R)])
-all_corr <- cor(residuals_std2, use = "complete.obs")
+all_corr <- cor(residuals_std2[,c(VarBase$Spec)], use = "complete.obs")
   
 #analyses for eigen values and parallel analysis
 ev <- eigen(R_corr)  
@@ -67,13 +67,18 @@ nfact <- nS$Components$nparallel
 m_bif <-  fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact+1, rotate="bifactor", fm="ml")
 print(m_bif)
 
-
-
 print(m_bif$loadings, digits=2, cutoff=.29, sort=T)
+
+
 m1 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="varimax", fm="minres")
+print(m1$loadings, digits=2, cutoff=.29, sort=T)
 m2 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="promax", fm="minres")
+print(m2$loadings, digits=2, cutoff=.29, sort=T)
 m3 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="oblimin", fm="minres")
+print(m3$loadings, digits=2, cutoff=.29, sort=T)
+
 m4 <- schmid(R_corr, nfactors=nfact, n.obs=804, rotate="promax")
+print(m4$loadings, digits=2, cutoff=.29, sort=T)
 
 FullModel <- '
 
