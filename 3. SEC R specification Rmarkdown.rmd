@@ -40,7 +40,7 @@ fit.R.ortho <- cfa(Rmodel, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
 summary(fit.R.ortho, fit.measures=TRUE)
 parameterEstimates(fit.R.ortho)
 
-# the specified Rmodel doesn't fit the data well: TLI = .702 (threshold >= .95), CFI = .752 (threshold >= .90), SRMR = .084 (threshold <.08), RMSEA = .092 (threhold < .08)
+# the specified Rmodel doesn't fit the data well: TLI = .702 (threshold >= .95), CFI = .752 (threshold >= .90), SRMR = .084 (threshold <.08), RMSEA = .092 (threhold < .08); also can't compute standard errors (SOEPfin has a variance estimate of -439.508); model might be underidentified
 
 #time for exploratory analyses for the measurement model
 library(parallel)
