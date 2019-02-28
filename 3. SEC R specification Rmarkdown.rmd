@@ -3,12 +3,13 @@ title: "SEC R specification Rmarkdown"
 output: html_document
 ---
 
-
 library(lavaan)
 
 load(file="C:/Users/dalla/Google Drive/R Coding/Comparisons_Risk/SEC_R_Crowd_2_22_2019_imputed.Rdata")
 
 VarBase$R <- c('SOEPg', 'SOEPdri', 'SOEPocc', 'SOEPfin', 'SOEPrec', 'SOEPhea', 'SOEPsoc', 'SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich')
+
+summary(tib_summed[,c(VarBase$R)])
 
 #SECmodel
 SECmodel <- '
