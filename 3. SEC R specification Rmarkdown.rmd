@@ -27,7 +27,7 @@ fit.SEC.hierar <- cfa(SECmodel, data=residuals_std2, std.lv = TRUE)
 summary(fit.SEC.hierar, fit.measures=TRUE)
 parameterEstimates(fit.SEC.hierar)
 
-#Rmodel, replacing "-" with "+"
+#Rmodel, bifactor CFA specification
 Rmodel <- '
 fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
 
@@ -47,6 +47,216 @@ parameterEstimates(fit.R.ortho)
 
 # the specified Rmodel doesn't fit the data well: TLI = .702 (threshold >= .95), CFI = .752 (threshold >= .90), SRMR = .084 (threshold <.08), RMSEA = .092 (threhold < .08); also can't compute standard errors (SOEPfin has a variance estimate of -439.508); model might be underidentified
 
+#R2model, bifactor CFA specification, but removing SOEPfin from f2
+R2model <- '
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
+
+f1 =~ Dhea + SSdis + FTND_dich + Dm + SOEPg + SOEPrec + SOEPocc
+f2 =~ Dinv + Dgam + Deth + SSexp + FTND_dich
+f3 =~ SOEPrec + Drec + SSas
+f4 =~ BISa + BISm + BISn
+f5 =~ SOEPdri + SOEPfin + NODS_dich + Deth + Dsoc + SSexp
+'
+# Fit Rmodel, constraining covariances of all latent variables to be orthogonal
+fit.R2.ortho <- cfa(R2model, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
+summary(fit.R2.ortho, fit.measures=TRUE, modindices = TRUE)
+parameterEstimates(fit.R2.ortho)
+
+
+# 2 correlated factors model
+R3model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec
+'
+
+# Fit Rmodel, covariances of latent variables allowed to correlate
+fit.R3.dual <- cfa(R3model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R3.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 2 factors, with higher order factor construct, NOT IDENTIFIED
+R4model <- '
+R =~ need + ability
+
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec
+'
+
+fit.R4.higher <- cfa(R4model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R4.higher, fit.measures=TRUE, modindices = TRUE)
+
+# 2 correlated factors model, with cross-loadings for SOEPg, SOEPfin
+R5model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec + SOEPg + SOEPfin
+'
+
+fit.R5.dual <- cfa(R5model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R5.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 2 correlated factors model, with cross-loadings for SOEPg, SOEPfin, SOEPsoc
+R6model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec + SOEPg + SOEPfin + SOEPsoc
+'
+
+fit.R6.dual <- cfa(R6model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R6.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 4 factors, with shared R factor, factors accounting for stem effects in SOEP and BIS
+R7model <- '
+R =~ need + ability + SOEP + BIS
+
+need =~ SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp
+SOEP =~ SOEPocc + SOEPrec + SOEPfin + SOEPhea + SOEPg + SOEPdri
+BIS =~ BISa + BISm + BISn
+'
+
+fit.R7.dual <- cfa(R7model, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
+summary(fit.R7.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 2 correlated factors model with covariances specified within SOEP and BIS
+R8model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec
+
+SOEPg ~~ SOEPdri
+SOEPg ~~ SOEPsoc
+SOEPg ~~ SOEPocc
+SOEPg ~~ SOEPrec
+
+SOEPdri ~~ SOEPsoc
+SOEPdri ~~ SOEPocc
+SOEPdri ~~ SOEPrec
+
+SOEPsoc ~~ SOEPocc
+SOEPsoc ~~ SOEPrec
+
+SOEPocc ~~ SOEPrec
+
+BISa~~ BISm
+BISa ~~ BISn
+BISm ~~ BISn
+'
+
+# Fit Rmodel, covariances of latent variables allowed to correlate
+fit.R8.dual <- cfa(R8model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R8.dual, fit.measures=TRUE, modindices = TRUE)
+
+
+#ability =~     SOEPg 
+#SSbor ~~     SSexp 74.510
+#SOEPfin ~~      Dinv 70.139
+#Drec ~~      SSas 62.133
+
+# 2 correlated factors model with covariances specified within SOEP, BIS, and SS
+R9model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec
+
+SOEPg ~~ SOEPdri
+SOEPg ~~ SOEPsoc
+SOEPg ~~ SOEPocc
+SOEPg ~~ SOEPrec
+
+SOEPdri ~~ SOEPsoc
+SOEPdri ~~ SOEPocc
+SOEPdri ~~ SOEPrec
+
+SOEPsoc ~~ SOEPocc
+SOEPsoc ~~ SOEPrec
+
+SOEPocc ~~ SOEPrec
+
+BISa~~ BISm
+BISa ~~ BISn
+BISm ~~ BISn
+
+SSdis ~~ SSas
+SSdis~~ SSbor
+SSdis ~~ SSexp
+SSas ~~ SSbor
+SSas ~~ SSexp
+SSbor ~~ SSexp
+'
+fit.R9.dual <- cfa(R9model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R9.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 2 correlated factors model with covariances specified within SOEP, BIS, and SS, crossloading SOEPg and SOEPfin to ability
+R10model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPfin + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec + SOEPg + SOEPfin
+
+SOEPg ~~ SOEPdri
+SOEPg ~~ SOEPsoc
+SOEPg ~~ SOEPocc
+SOEPg ~~ SOEPrec
+
+SOEPdri ~~ SOEPsoc
+SOEPdri ~~ SOEPocc
+SOEPdri ~~ SOEPrec
+
+SOEPsoc ~~ SOEPocc
+SOEPsoc ~~ SOEPrec
+
+SOEPocc ~~ SOEPrec
+
+BISa~~ BISm
+BISa ~~ BISn
+BISm ~~ BISn
+
+SSdis ~~ SSas
+SSdis~~ SSbor
+SSdis ~~ SSexp
+SSas ~~ SSbor
+SSas ~~ SSexp
+SSbor ~~ SSexp
+'
+
+# Fit Rmodel,  covariances of latent variables allowed to correlate
+fit.R10.dual <- cfa(R10model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R10.dual, fit.measures=TRUE, modindices = TRUE)
+
+# 2 correlated factors model with covariances specified within SOEP, BIS, and SS, no crossloading, but specified instead SOEPfin to ability
+R11model <- '
+need =~ SOEPg + SOEPdri + SOEPsoc + Dhea + Dgam + Deth + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec + SOEPfin
+
+SOEPg ~~ SOEPdri
+SOEPg ~~ SOEPsoc
+SOEPg ~~ SOEPocc
+SOEPg ~~ SOEPrec
+
+SOEPdri ~~ SOEPsoc
+SOEPdri ~~ SOEPocc
+SOEPdri ~~ SOEPrec
+
+SOEPsoc ~~ SOEPocc
+SOEPsoc ~~ SOEPrec
+
+SOEPocc ~~ SOEPrec
+
+BISa~~ BISm
+BISa ~~ BISn
+BISm ~~ BISn
+
+SSdis ~~ SSas
+SSdis~~ SSbor
+SSdis ~~ SSexp
+SSas ~~ SSbor
+SSas ~~ SSexp
+SSbor ~~ SSexp
+'
+
+# Fit Rmodel,  covariances of latent variables allowed to correlate
+fit.R11.dual <- cfa(R11model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R11.dual, fit.measures=TRUE, modindices = TRUE)
+
+
+
+
+
+
 #time for exploratory analyses for the measurement model
 library(parallel)
 library(nFactors)
@@ -55,6 +265,9 @@ library(polycor)
 SEC_corr <- cor(residuals_std2[,c(VarBase$SECtot)])
 R_corr <- cor(residuals_std2[,c(VarBase$R)])
 all_corr <- cor(residuals_std2[,c(VarBase$Spec)], use = "complete.obs")
+  
+
+
   
 #analyses for eigen values and parallel analysis
 ev <- eigen(R_corr)  
@@ -70,25 +283,223 @@ nfact <- nS$Components$nparallel
 
 #bifactor model
 m_bif <-  fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact+1, rotate="bifactor", fm="ml")
-print(m_bif)
+print(m_bif, digits=2, cutoff=.25, sort=T)
 
-print(m_bif$loadings, digits=2, cutoff=.29, sort=T)
+print(m_bif$loadings, digits=2, cutoff=.25, sort=T)
+
+
+
+# some functions
+ths <- .25
+get_mstring <- function(l, t=.25, bifactor=F, highord=F, schmid=F) {
+  v <- row.names(l)
+  
+  if (bifactor == T) {
+    Fs <- colnames(l)[-1]
+    vars <- row.names(l)[which(apply(l >= t, 1, sum) >=1)]
+    #vt <- v[(apply(abs(l[,Fs]), 1, max) >= t)]
+    model <- paste("R =~ ", paste(v, collapse=" + "), sep="")
+    
+  }
+  else if (schmid == T) {
+    Fs <- colnames(l)[grepl("F", colnames(l))]
+    model <- paste("R =~ ", paste(substr(Fs, 1, 2), collapse=" + "), sep="")
+    #model <- paste("R =~ ", paste(row.names(l)[l$g >= t], collapse=" + "), sep="")
+    #model <- paste("R =~ ", paste(v, collapse=" + "), sep="")
+  }
+  else if (highord == T) {
+    Fs <- colnames(l)
+    model <- paste("R =~ ", paste(paste("F", 1:length(Fs), sep=""), collapse=" + "), sep="")
+  }
+  else {
+    model <- ""
+    Fs <- colnames(l)
+  }
+  
+  # on which factor does each measure have the highest loading?
+  highest <- apply(l[,Fs], 1, which.max)
+  
+  for (i in 1:length(Fs)) {
+    
+    current <- l[,Fs[i]]
+    
+    # remove cross-loadings
+    #current[i != highest] <- 0
+    
+    string <- paste("\nF", i, " =~ ", paste(names(which(abs(current) >= t)), collapse=" + "), sep="")
+    model <- paste(model, string)
+  }
+  
+  model <- paste(model, "\n")
+  return(model)
+}
+
+
+get_mstring(m_bif$loadings, bifactor=T, t=ths)
+str <- get_mstring(m_bif$loadings, bifactor=T, t=ths)
+
+#adding SSexp to F4, removing from F3
+str <- '
+R =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + SSexp + SSdis + SSas + SSbor + BISa + BISm + BISn + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + Dm + GBS + DAST_dich + FTND_dich + AUDIT + NODS_dich 
+F1 =~ SOEPg + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc 
+F2 =~ SOEPhea + BISa + BISm + BISn + Dinv 
+F3 =~ Dgam + Dsoc + Dm + GBS + AUDIT 
+F4 =~ SSas + Drec  + SSexp 
+F5 =~ SSexp + Dinv + FTND_dich
+'
+cat(str)
+
+
+fit.m_bif <- cfa(str, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
+summary(fit.m_bif, fit.measures=TRUE, modindices = TRUE)
 
 
 m1 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="varimax", fm="minres")
+print(m1)
 print(m1$loadings, digits=2, cutoff=.29, sort=T)
 m2 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="promax", fm="minres")
+print(m2)
 print(m2$loadings, digits=2, cutoff=.29, sort=T)
 m3 <- fa(r=R_corr, covar=F, n.obs=804, nfactors=nfact, rotate="oblimin", fm="minres")
+print(m3)
 print(m3$loadings, digits=2, cutoff=.29, sort=T)
 
 m4 <- schmid(R_corr, nfactors=nfact, n.obs=804, rotate="promax")
 print(m4$loadings, digits=2, cutoff=.29, sort=T)
 
-FullModel <- '
+
+# derived examining correlation matrix and item content
+R12model <- '
+deviance =~ SOEPdri + Dhea + Dgam + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea
+confidence  =~ SOEPg + Drec +  Dsoc + SSas + SSexp + SOEPocc + SOEPrec + SOEPsoc
+impulsivity_investing =~ Dinv + BISa + BISm + BISn + SOEPfin 
+'
+fit.R12 <- cfa(R12model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R12, fit.measures=TRUE, modindices = TRUE)
+
+
+# derived examining correlation matrix and item content, add GBS
+R13model <- '
+health =~ SOEPdri + Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea + SOEPg
+finance =~ Dgam + Dinv + SOEPfin + GBS
+recreation =~ Drec + SSas + SSexp + SOEPrec
+social =~ SOEPocc + SOEPsoc + Dsoc
+impulsivity =~ BISa + BISm + BISn
+'
+
+fit.R13 <- cfa(R13model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R13, fit.measures=TRUE, modindices = TRUE)
+
+# derived examining correlation matrix and item content, cross-loading SOEPg
+R14model <- '
+health =~ SOEPdri + Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea + SOEPg
+finance =~ Dgam + Dinv + SOEPfin + GBS + SOEPg
+recreation =~ Drec + SSas + SSexp + SOEPrec + SOEPg
+social =~ SOEPocc + SOEPsoc + Dsoc + SOEPg
+impulsivity =~ BISa + BISm + BISn + SOEPg
+'
+
+fit.R14 <- cfa(R14model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R14, fit.measures=TRUE, modindices = TRUE)
+
+#cross-loading SOEPfin and SOEPrec to social
+R15model <- '
+health =~ SOEPdri + Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea + SOEPg
+finance =~ Dgam + Dinv + SOEPfin + GBS + SOEPg
+recreation =~ Drec + SSas + SSexp + SOEPrec + SOEPg
+social =~ SOEPocc + SOEPsoc + Dsoc + SOEPg + SOEPfin + SOEPrec
+impulsivity =~ BISa + BISm + BISn + SOEPg
+'
+
+fit.R15 <- cfa(R15model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R15, fit.measures=TRUE, modindices = TRUE)
+
+
+#removing SOEPg from health, finance, and impulsivity
+R16model <- '
+health =~ SOEPdri + Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea 
+finance =~ Dgam + Dinv + SOEPfin + GBS
+recreation =~ Drec + SSas + SSexp + SOEPrec + SOEPg
+social =~ SOEPocc + SOEPsoc + Dsoc + SOEPg + SOEPfin + SOEPrec
+impulsivity =~ BISa + BISm + BISn 
+'
+
+fit.R16 <- cfa(R16model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R16, fit.measures=TRUE, modindices = TRUE)
+
+#removing SOEPg from recreation
+R17model <- '
+health =~ SOEPdri + Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPhea 
+finance =~ Dgam + Dinv + SOEPfin + GBS
+recreation =~ Drec + SSas + SSexp + SOEPrec 
+social =~ SOEPocc + SOEPsoc + Dsoc + SOEPg + SOEPfin + SOEPrec
+impulsivity =~ BISa + BISm + BISn 
+'
+
+fit.R17 <- cfa(R17model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R17, fit.measures=TRUE, modindices = TRUE)
+
+#removing SOEP items 
+R18model <- '
+health =~ Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm 
+finance =~ Dgam + Dinv + GBS
+recreation =~ Drec + SSas + SSexp + Dsoc
+impulsivity =~ BISa + BISm + BISn 
+'
+
+fit.R18 <- cfa(R18model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R18, fit.measures=TRUE, modindices = TRUE)
+
+#removing SOEP items 
+R18model <- '
+health =~ Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm 
+finance =~ Dgam + Dinv + GBS
+recreation =~ Drec + SSas + SSexp + Dsoc
+impulsivity =~ BISa + BISm + BISn 
+'
+
+fit.R18 <- cfa(R18model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R18, fit.measures=TRUE, modindices = TRUE)
+
+residuals_std2$SOEPsum <- rowSums(residuals_std2[,c(VarBase$SOEP)])
+
+#parcelling SOEP items
+R19model <- '
+health =~ Dhea + Deth + SSdis + SSbor +  AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm + SOEPsum
+finance =~ Dgam + Dinv + GBS
+recreation =~ Drec + SSas + SSexp + Dsoc
+impulsivity =~ BISa + BISm + BISn 
+'
+
+fit.R19 <- cfa(R19model, data=residuals_std2, std.lv = TRUE, orthogonal=FALSE)
+summary(fit.R19, fit.measures=TRUE, modindices = TRUE)
+
+
+#let's try a path analysis with the original bifactor model (NOT IDENTIFIED)
+OG.Bif.Model <- '
+#SECmodel
+fSEC =~ fSECenvy + fSECcse + fSECjs
+fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
+fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
+
+#risk model
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
+
+f1 =~ Dhea + SSdis + FTND_dich + Dm + SOEPg + SOEPrec + SOEPocc
+f2 =~ Dinv + Dgam + Deth + SSexp + FTND_dich
+f3 =~ SOEPrec + Drec + SSas
+f4 =~ BISa + BISm + BISn
+f5 =~ SOEPdri + SOEPfin + NODS_dich + Deth + Dsoc + SSexp
 
 #path
-fR ~ fSEC
+fSEC ~ fR 
+'
+sem.fit <- sem(OG.Bif.Model, data=residuals_std2)
+
+
+#SEM with EFA-guided bifactor model
+FullModelBif <- '
 
 #SECmodel
 fSEC =~ fSECenvy + fSECcse + fSECjs
@@ -96,13 +507,37 @@ fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
 fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
 fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
 
-#Rmodel
-fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND + DAST + NODS + Dm
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
 
-f1 =~ Dhea + SSdis + FTND + Dm - SOEPg - SOEPrec - SOEPocc
-f2 =~ SOEPfin + Dinv + Dgam + Deth - SSexp
+f1 =~ Dhea + SSdis + FTND_dich + Dm + SOEPg + SOEPrec + SOEPocc
+f2 =~ Dinv + Dgam + Deth + SSexp + FTND_dich
 f3 =~ SOEPrec + Drec + SSas
 f4 =~ BISa + BISm + BISn
-f5 =~ SOEPdri + SOEPfin + NODS - Deth - Dsoc - SSexp
+f5 =~ SOEPdri + SOEPfin + NODS_dich + Deth + Dsoc + SSexp
+
+fSEC~fR
 '
 
+bif.sem.fit <- sem(FullModelBif, data=residuals_std2, std.lv = TRUE, orthogonal = TRUE)
+summary(bif.sem.fit, fit.measures=TRUE, standardized=TRUE)
+
+#higher-order, 4-factor R sem model
+high.sem.model <- '
+fSEC =~ fSECenvy + fSECcse + fSECjs
+fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
+fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
+
+
+R =~ need + ability + SOEP + impulsivity
+
+need =~ Dhea + Dgam + Deth + SSdis + SSbor + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
+ability =~ Dinv + Drec +  Dsoc + SSas + SSexp
+SOEP =~ SOEPocc + SOEPrec + SOEPfin + SOEPhea + SOEPg + SOEPdri + SOEPsoc
+impulsivity =~ BISa + BISm + BISn
+
+fSEC~R
+'
+
+high.sem.fit <- sem(high.sem.model, data=residuals_std2, std.lv = TRUE, orthogonal = TRUE)
+summary(high.sem.model, fit.measures=TRUE, standardized=TRUE)
