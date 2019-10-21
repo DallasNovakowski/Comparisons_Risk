@@ -69,8 +69,6 @@ tib_cleaning$BSCS_13r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_13, "1" = "5
 #reverse-code SEC_7: "I feel that I am a person of worth, at least on an equal plane with others. "
 tib_cleaning$SEC_7r <- as.numeric(dplyr::recode(tib_cleaning$SEC_7, "1" = "7" , "2" = "6", "3" = "5", "4" = "4", "5" = "3", "6" = "2", "7" = "1"))
 
-
-
 #recoding FTND measures because they're skewed by +1
 tib_cleaning$FTND_1f <- tib_cleaning$FTND_1 -1 
 tib_cleaning$FTND_2f <- tib_cleaning$FTND_2 -1 
