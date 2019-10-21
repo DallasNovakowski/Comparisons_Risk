@@ -66,6 +66,8 @@ tib_cleaning$BSCS_10r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_10, "1" = "5
 tib_cleaning$BSCS_12r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_12, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
 tib_cleaning$BSCS_13r <- as.numeric(dplyr::recode(tib_cleaning$BSCS_13, "1" = "5" , "2" = "4" , "3" = "3" , "4" = "2" , "5" = "1"))
 
+#reverse-code SEC_7: "I feel that I am a person of worth, at least on an equal plane with others. "
+tib_cleaning$SEC_7r <- as.numeric(dplyr::recode(tib_cleaning$SEC_7, "1" = "7" , "2" = "6", "3" = "5", "4" = "4", "5" = "3", "6" = "2", "7" = "1"))
 
 
 
@@ -109,6 +111,9 @@ tib_cleaning$DAST_8f <- as.numeric(dplyr::recode(tib_cleaning$DAST_8, "1" = "1" 
 tib_cleaning$DAST_9f <- as.numeric(dplyr::recode(tib_cleaning$DAST_9, "1" = "1" , "2" = "0"))
 tib_cleaning$DAST_10f <- as.numeric(dplyr::recode(tib_cleaning$DAST_10, "1" = "1" , "2" = "0"))
 
+
+
+
 #create lists for variable computation
 VarBase <- list()
 VarBase$Pnum <- c('Pnum', 'AttnChckPass')
@@ -137,9 +142,9 @@ VarBase$AUDIT <-  c('AUDIT_1', 'AUDIT_2', 'AUDIT_3', 'AUDIT_4', 'AUDIT_5', 'AUDI
 VarBase$NODS <-  c('NODS_1f', 'NODS_2f', 'NODS_3f', 'NODS_4f', 'NODS_5f', 'NODS_6f', 'NODS_7f', 'NODS_8f', 'NODS_9f', 'NODS_10f', 'NODS_11f', 'NODS_12f', 'NODS_13f', 'NODS_14f', 'NODS_16f', 'NODS_17f')
 #pipe = only presented if condition met; 7: if unsuccessful cessation attempted, 12: if lied to social network, 15: only if in school
 VarBase$NODSpipe <- c('NODS_7f', 'NODS_12f','NODS_15f')
-VarBase$SECtot <-  c('SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
+VarBase$SECtot <-  c('SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7r', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
 VarBase$SECenvy <-  c('SEC_1', 'SEC_2', 'SEC_3', 'SEC_4')
-VarBase$SECcse <-  c('SEC_5', 'SEC_6','SEC_7', 'SEC_8')
+VarBase$SECcse <-  c('SEC_5', 'SEC_6','SEC_7r', 'SEC_8')
 VarBase$SECjs <- c('SEC_9','SEC_10', 'SEC_11', 'SEC_12')
 
 VarBase$ALL <- c(VarBase$SSexp, VarBase$SSdis, VarBase$SSas, VarBase$SSbor, VarBase$BISa, VarBase$BISm, VarBase$BISn, VarBase$Dhea, VarBase$Dinv, VarBase$Dgam, VarBase$Deth, VarBase$Drec, VarBase$Dsoc, VarBase$SOEP, VarBase$Dm, VarBase$GBS, VarBase$NODS, VarBase$DAST, VarBase$AUDIT, VarBase$SECtot)

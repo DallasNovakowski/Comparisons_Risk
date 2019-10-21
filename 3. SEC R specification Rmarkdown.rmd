@@ -19,7 +19,7 @@ summary(tib_complete[,c(VarBase$R)])
 SECmodel <- '
 fSEC =~ fSECenvy + fSECcse + fSECjs
 fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
-fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECcse =~ SEC_5 + SEC_6 + SEC_7r + SEC_8
 fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
 '
 
@@ -347,7 +347,21 @@ F3 =~ Dgam + Dsoc + Dm + GBS + AUDIT
 F4 =~ SSas + Drec  + SSexp 
 F5 =~ SSexp + Dinv + FTND_dich
 '
+
+#removing SSexp from f5, adding DAST_dich - THIS IS THE MODEL USED FOR AGRI 2019
+str <- '
+R =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + SSexp + SSdis + SSas + SSbor + BISa + BISm + BISn + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + Dm + GBS + DAST_dich + FTND_dich + AUDIT + NODS_dich 
+F1 =~ SOEPg + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc 
+F2 =~ SOEPhea + BISa + BISm + BISn + Dinv 
+F3 =~ Dgam + Dsoc + Dm + GBS + AUDIT 
+F4 =~ SSas + Drec  + SSexp 
+F5 =~ DAST_dich + Dinv + FTND_dich
+'
+
+
 cat(str)
+
+
 
 
 fit.m_bif <- cfa(str, data=residuals_std2, std.lv = TRUE, orthogonal=TRUE)
@@ -480,7 +494,7 @@ OG.Bif.Model <- '
 #SECmodel
 fSEC =~ fSECenvy + fSECcse + fSECjs
 fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
-fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECcse =~ SEC_5 + SEC_6 + SEC_7r + SEC_8
 fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
 
 #risk model
@@ -498,23 +512,20 @@ fSEC ~ fR
 sem.fit <- sem(OG.Bif.Model, data=residuals_std2)
 
 
-#SEM with EFA-guided bifactor model
-FullModelBif <- '
+#sem with EFA-bifactor Rmodel - USED FOR AGRI 2019
 
+FullModelBif <- '
 #SECmodel
 fSEC =~ fSECenvy + fSECcse + fSECjs
 fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
-fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECcse =~ SEC_5 + SEC_6 + SEC_7r + SEC_8
 fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
-
-fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + SSas + SSexp + SSdis + SSbor + BISa + BISm + BISn + AUDIT + FTND_dich + DAST_dich + NODS_dich + Dm
-
-f1 =~ Dhea + SSdis + FTND_dich + Dm + SOEPg + SOEPrec + SOEPocc
-f2 =~ Dinv + Dgam + Deth + SSexp + FTND_dich
-f3 =~ SOEPrec + Drec + SSas
-f4 =~ BISa + BISm + BISn
-f5 =~ SOEPdri + SOEPfin + NODS_dich + Deth + Dsoc + SSexp
-
+fR =~ SOEPg + SOEPdri + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc + SSexp + SSdis + SSas + SSbor + BISa + BISm + BISn + Dhea + Dinv + Dgam + Deth + Drec + Dsoc + Dm + GBS + DAST_dich + FTND_dich + AUDIT + NODS_dich 
+F1 =~ SOEPg + SOEPocc + SOEPfin + SOEPrec + SOEPhea + SOEPsoc 
+F2 =~ SOEPhea + BISa + BISm + BISn + Dinv 
+F3 =~ Dgam + Dsoc + Dm + GBS + AUDIT 
+F4 =~ SSas + Drec  + SSexp 
+F5 =~ DAST_dich + Dinv + FTND_dich
 fSEC~fR
 '
 
@@ -525,7 +536,7 @@ summary(bif.sem.fit, fit.measures=TRUE, standardized=TRUE)
 high.sem.model <- '
 fSEC =~ fSECenvy + fSECcse + fSECjs
 fSECenvy =~ SEC_1 + SEC_2 + SEC_3 + SEC_4
-fSECcse =~ SEC_5 + SEC_6 + SEC_7 + SEC_8
+fSECcse =~ SEC_5 + SEC_6 + SEC_7r + SEC_8
 fSECjs =~ SEC_9 + SEC_10 + SEC_11 + SEC_12
 
 

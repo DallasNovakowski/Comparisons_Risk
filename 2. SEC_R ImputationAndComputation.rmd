@@ -137,6 +137,43 @@ tib_imputed <- rbindlist(list(dat_imp1, dat_imp2, dat_imp3, dat_imp4, dat_imp5, 
 
 tib_filled <- cbind.fill(tib_imputed,tib_cleaned[,c(VarBase$demo)])
 
+
+# calculate Cronbach's alphas
+c_alpha <- list()
+c_alpha$SSexp <- psych:: alpha(tib_filled[,c(VarBase$SSexp)])
+c_alpha$SSdis <- psych:: alpha(tib_filled[,c(VarBase$SSdis)])
+c_alpha$SSas <- psych:: alpha(tib_filled[,c(VarBase$SSas)])
+c_alpha$SSbor <- psych:: alpha(tib_filled[,c(VarBase$SSbor)])
+c_alpha$BISa <- psych:: alpha(tib_filled[,c(VarBase$BISa)])
+c_alpha$BISm <- psych:: alpha(tib_filled[,c(VarBase$BISm)])
+c_alpha$BISn <- psych:: alpha(tib_filled[,c(VarBase$BISn)])
+c_alpha$Dhea <- psych:: alpha(tib_filled[,c(VarBase$Dhea)])
+c_alpha$Dinv <- psych:: alpha(tib_filled[,c(VarBase$Dinv)])
+c_alpha$Dgam <- psych:: alpha(tib_filled[,c(VarBase$Dgam)])
+c_alpha$Deth <- psych:: alpha(tib_filled[,c(VarBase$Deth)])
+c_alpha$Drec <- psych:: alpha(tib_filled[,c(VarBase$Drec)])
+c_alpha$Dsoc <- psych:: alpha(tib_filled[,c(VarBase$Dsoc)])
+c_alpha$SOEP <- psych:: alpha(tib_filled[,c(VarBase$SOEP)])
+c_alpha$Dm <- psych:: alpha(tib_filled[,c(VarBase$Dm)])
+c_alpha$GBS <- psych:: alpha(tib_filled[,c(VarBase$GBS)])
+c_alpha$GBS_all <- psych:: alpha(tib_filled[,c(VarBase$GBS_all)])
+c_alpha$DASTb <- psych:: alpha(tib_filled[,c(VarBase$DASTb)])
+c_alpha$DAST <- psych:: alpha(tib_filled[,c(VarBase$DAST)])
+c_alpha$FTND <- psych:: alpha(tib_filled[,c(VarBase$FTND)])
+c_alpha$AUDIT <- psych:: alpha(tib_filled[,c(VarBase$AUDIT)])
+c_alpha$NODS <- psych:: alpha(tib_filled[,c(VarBase$NODS)])
+c_alpha$NODSpipe <- psych:: alpha(tib_filled[,c(VarBase$NODSpipe)])
+c_alpha$SECtot <- psych:: alpha(tib_filled[,c(VarBase$SECtot)])
+c_alpha$SECenvy <- psych:: alpha(tib_filled[,c(VarBase$SECenvy)])
+c_alpha$SECcse <- psych:: alpha(tib_filled[,c(VarBase$SECcse)])
+c_alpha$SECjs <- psych:: alpha(tib_filled[,c(VarBase$SECjs)])
+
+
+#create a list of raw alpha values from the c_alpha list, which took like an hour because I'm the smartest stupid person on the planet
+alphas <- lapply(c_alpha, FUN = function(x){
+    x$total$raw_alpha
+})
+
 # VARIABLE COMPUTATION
 SSexp <- rowSums(tib_filled[,c(VarBase$SSexp)])
 SSdis <- rowSums(tib_filled[,c(VarBase$SSdis)])
@@ -221,7 +258,7 @@ summary(tib_summed$NODS_dich)
 
 #all variables that are needed for model specification
 #VarBase$Demo, VarBase$Pnum
-VarBase$Spec <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich','SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
+VarBase$Spec <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich','SEC_1', 'SEC_2', 'SEC_3', 'SEC_4', 'SEC_5', 'SEC_6', 'SEC_7r', 'SEC_8', 'SEC_9', 'SEC_10', 'SEC_11', 'SEC_12')
 VarBase$R <- c('SSexp', 'SSdis', 'SSas', 'SSbor', 'BISa', 'BISm', 'BISn', 'Dhea', 'Dinv', 'Dgam', 'Deth', 'Drec', 'Dsoc', 'Dm', 'GBS', 'DAST_dich', 'FTND_dich', 'AUDIT', 'NODS_dich')
 
 
