@@ -254,9 +254,6 @@ summary(fit.R11.dual, fit.measures=TRUE, modindices = TRUE)
 
 
 
-
-
-
 #time for exploratory analyses for the measurement model
 library(parallel)
 library(nFactors)
